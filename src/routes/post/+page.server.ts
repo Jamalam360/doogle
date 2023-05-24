@@ -1,7 +1,6 @@
 import { fail, redirect } from "@sveltejs/kit";
 import type { Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
-import { lookup } from "mime-types";
 
 export const load: PageServerLoad = async ({ locals: { getSession, supabase } }) => {
 	const session = await getSession();
@@ -29,10 +28,16 @@ export const actions: Actions = {
 			return fail(400, { data: "no file lol" });
 		}
 
+		const contentType = getContentType(file.name);
+
+		if (!contentType) {
+			return fail(400, { data: "invalid file type" });
+		}
+
 		const { data: sd, error: se } = await supabase.storage
 			.from("images")
 			.upload(`${session.user.id}/${file.name}`, file, {
-				contentType: lookup(file.name) || "image/jpeg",
+				contentType,
 			});
 
 		if (se || !sd) {
@@ -51,3 +56,11 @@ export const actions: Actions = {
 		throw redirect(303, "/feed");
 	},
 };
+
+function getContentType(path: string): string | undefined {
+	const ext = path.split(".").pop();
+	if (ext === "png") return "image/png";
+	if (ext === "jpg" || ext === "jpeg") return "image/jpeg";
+	if (ext === "gif") return "image/gif";
+	if (ext === "webp") return "image/webp";
+}
