@@ -28,12 +28,13 @@
 
 <br />
 
-{#each posts as post}
+{#each posts as post, i}
 	{#key post.id}
 		<Post
 			{post}
 			supabase={data.supabase}
 			session={data.session}
+			onTop={i == 0}
 			onVoted={() => {
 				posts = [...posts.splice(1)];
 			}}

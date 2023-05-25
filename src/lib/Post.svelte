@@ -6,6 +6,7 @@
 	export let session: Session;
 	export let post: Database["public"]["Tables"]["posts"]["Row"];
 	export let onVoted: () => void;
+	export let onTop: boolean;
 
 	let voted = false;
 	let upvoted = false;
@@ -100,14 +101,16 @@
 	// Swipe logic
 
 	const handleArrowKeys = (e: KeyboardEvent) => {
-		if (e.key === "ArrowLeft") {
-			downvote();
-		} else if (e.key === "ArrowRight") {
-			upvote();
-		} else if (e.key === "ArrowUp") {
-			upvote();
-		} else if (e.key === "ArrowDown") {
-			downvote();
+		if (onTop) {
+			if (e.key === "ArrowLeft") {
+				downvote();
+			} else if (e.key === "ArrowRight") {
+				upvote();
+			} else if (e.key === "ArrowUp") {
+				upvote();
+			} else if (e.key === "ArrowDown") {
+				downvote();
+			}
 		}
 	};
 
@@ -122,23 +125,27 @@
 	};
 
 	const handleTouchMove = (ev: TouchEvent) => {
-		const diffX = ev.touches[0].clientX - startX;
-		currentX = diffX;
-		card.style.transition = "none";
-		card.style.transform = `translateX(${diffX}px)`;
+		if (onTop) {
+			const diffX = ev.touches[0].clientX - startX;
+			currentX = diffX;
+			card.style.transition = "none";
+			card.style.transform = `translateX(${diffX}px)`;
+		}
 	};
 
 	const handleTouchEnd = async () => {
-		if (currentX > card.clientWidth * swipeThreshold) {
-			await upvote();
-			onVoted();
-		} else if (currentX < card.clientWidth * swipeThreshold) {
-			await downvote();
-			onVoted();
-		} else {
-			currentX = 0;
-			card.style.transition = "transform 0.5s ease";
-			card.style.transform = `translateX(0px)`;
+		if (onTop) {
+			if (currentX > card.clientWidth * swipeThreshold) {
+				await upvote();
+				onVoted();
+			} else if (currentX < card.clientWidth * swipeThreshold) {
+				await downvote();
+				onVoted();
+			} else {
+				currentX = 0;
+				card.style.transition = "transform 0.5s ease";
+				card.style.transform = `translateX(0px)`;
+			}
 		}
 	};
 </script>
