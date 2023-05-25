@@ -2,20 +2,22 @@
 	import "../app.css";
 	import { invalidate } from "$app/navigation";
 	import { onMount } from "svelte";
+	import type { LayoutData } from "./$types";
+	import { page } from "$app/stores";
 
-	export let data;
+	export let data: LayoutData;
 
 	$: ({ supabase, session } = data);
 
 	onMount(() => {
-		const { data } = supabase.auth.onAuthStateChange((event, _session) => {
-			if (_session?.expires_at !== session?.expires_at) {
+		const { data } = supabase.auth.onAuthStateChange((_, session) => {
+			if (session?.expires_at !== session?.expires_at) {
 				invalidate("supabase:auth");
 			}
 		});
 
 		return () => data.subscription.unsubscribe();
-	});
+	});	
 </script>
 
 <main class="h-screen bg-gray-50 text-gray-950">
@@ -28,7 +30,7 @@
 			<a href={`/profile/${session.user.id}`}>
 				<img src={session.user.user_metadata.avatar_url} alt="avatar" class="h-14 rounded-full" />
 			</a>
-		{:else}
+		{:else if $page.url.pathname !== "/login"}
 			<a href="/login" class="text-2xl font-bold text-gray-950 hover:text-gray-900"> Login </a>
 		{/if}
 	</nav>
