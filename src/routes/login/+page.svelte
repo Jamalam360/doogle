@@ -9,7 +9,7 @@
 	supabaseClient={data.supabase}
 	providers={['discord']}
     onlyThirdPartyProviders={true}
-	redirectTo={`${data.url}/logging-in?redirect=/`}
+	redirectTo={`${data.url}/logging-in`}
 	appearance={{ theme: ThemeSupa, style: {} }}
 	additionalData={{}}
 />

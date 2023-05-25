@@ -52,6 +52,23 @@ export interface Database {
           user_id?: string | null
         }
       }
+      profiles: {
+        Row: {
+          avatar: string
+          id: string
+          username: string
+        }
+        Insert: {
+          avatar: string
+          id: string
+          username: string
+        }
+        Update: {
+          avatar?: string
+          id?: string
+          username?: string
+        }
+      }
     }
     Views: {
       [_ in never]: never
