@@ -1,7 +1,8 @@
 <script lang="ts">
 	import Post from "$lib/Post.svelte";
+	import type { PageData } from "./$types";
 
-	export let data;
+	export let data: PageData;
 </script>
 
 <p>Logged in as {data.user.email}</p>
@@ -9,6 +10,5 @@
 
 <br />
 
-{#each data.posts as post}
-	<Post {post} supabase={data.supabase} session={data.session} />
+{#each data.posts || [] as post}
 {/each}

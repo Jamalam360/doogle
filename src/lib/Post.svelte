@@ -7,10 +7,25 @@
 	export let post: Database["public"]["Tables"]["posts"]["Row"];
 	export let onVoted: () => void;
 	export let onTop: boolean;
+	export let index: number;
 
 	let voted = false;
 	let upvoted = false;
 	let value = 0;
+
+	const rotations = [
+		"-rotate-6",
+		"-rotate-3",
+		"-rotate-2",
+		"-rotate-1",
+		"rotate-0",
+		"rotate-1",
+		"rotate-2",
+		"rotate-3",
+		"rotate-6",
+	];
+
+	const rotation = rotations[Math.floor(Math.random() * rotations.length)];
 
 	$: {
 		supabase
@@ -98,27 +113,35 @@
 		upvoted = false;
 	};
 
-	// Swipe logic
+	let startX = 0;
+	let currentX = 0;
+	let card: HTMLDivElement;
+
+	const swipeThreshold = 0.6;
 
 	const handleArrowKeys = (e: KeyboardEvent) => {
 		if (onTop) {
 			if (e.key === "ArrowLeft") {
 				downvote();
+				card.style.transform = `translate(-100%, -50%)`;
+				card.style.transition = "transform 0.5s ease";
 			} else if (e.key === "ArrowRight") {
 				upvote();
+				card.style.transform = `translate(100%, -50%)`;
+				card.style.transition = "transform 0.5s ease";
 			} else if (e.key === "ArrowUp") {
 				upvote();
+				card.style.transform = `translate(100%, -50%)`;
+				card.style.transition = "transform 0.5s ease";
 			} else if (e.key === "ArrowDown") {
 				downvote();
+				card.style.transform = `translate(-100%, -50%)`;
+				card.style.transition = "transform 0.5s ease";
 			}
+
+			setTimeout(onVoted, 400);
 		}
 	};
-
-	let startX = 0;
-	let currentX = 0;
-	let card: HTMLDivElement;
-
-	const swipeThreshold = 0.5;
 
 	const handleTouchStart = (ev: TouchEvent) => {
 		startX = ev.touches[0].clientX;
@@ -129,22 +152,22 @@
 			const diffX = ev.touches[0].clientX - startX;
 			currentX = diffX;
 			card.style.transition = "none";
-			card.style.transform = `translateX(${diffX}px)`;
+			card.style.transform = `translate(${diffX}px, -50%)`;
 		}
 	};
 
 	const handleTouchEnd = async () => {
 		if (onTop) {
-			if (currentX > card.clientWidth * swipeThreshold) {
+			if (Math.abs(currentX) > card.clientWidth * swipeThreshold) {
 				await upvote();
 				onVoted();
-			} else if (currentX < card.clientWidth * swipeThreshold) {
+			} else if (currentX < -(card.clientWidth * swipeThreshold)) {
 				await downvote();
 				onVoted();
 			} else {
 				currentX = 0;
 				card.style.transition = "transform 0.5s ease";
-				card.style.transform = `translateX(0px)`;
+				card.style.transform = `translate(0px, -50%)`;
 			}
 		}
 	};
@@ -152,15 +175,18 @@
 
 <svelte:window on:keydown={handleArrowKeys} />
 
-<div class="h-full w-full flex items-center justify-center">
-	<div
-		class="h-full w-11/12 bg-gray-100 rounded-2xl shadow-2xl"
-		bind:this={card}
-		on:touchstart={handleTouchStart}
-		on:touchmove={handleTouchMove}
-		on:touchend={handleTouchEnd}
-	>
-		<h2 class="pt-2 text-center text-4xl font-bold">{value}</h2>
-		<img src={post.image} alt="Dog" class="p-2 rounded-3xl" />
-	</div>
+<div
+	class={`top-1/2 -translate-y-1/2 absolute w-[95vw] bg-[#00dde7] rounded-2xl shadow-2xl` + (!onTop ? `shadow-none ${rotation}` : "")}
+	style={`z-index: ${index}`}
+	bind:this={card}
+	on:touchstart={handleTouchStart}
+	on:touchmove={handleTouchMove}
+	on:touchend={handleTouchEnd}
+>
+	<h2 class="pt-2 text-center text-4xl text-[#404b55] font-bold">{value}</h2>
+	<img
+		src={post.image}
+		alt="Dog"
+		class={`h-[60vh] w-full aspect-[9/16] object-cover p-2 rounded-3xl ${!onTop ? `opacity-30` : ""}`}
+	/>
 </div>

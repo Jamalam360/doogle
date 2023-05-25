@@ -6,7 +6,6 @@
 	export let data: PageData;
 	const session = data.session;
 
-	console.log(session);
 	if (browser && !session) {
 		goto("/login");
 	} else if (browser && session) {

@@ -4,5 +4,13 @@ export default {
 	theme: {
 		extend: {},
 	},
+	safelist: [
+		{
+			pattern: /z-/,
+		},
+		{
+			pattern: /-?rotate-/,
+		},
+	],
 	plugins: [],
 };

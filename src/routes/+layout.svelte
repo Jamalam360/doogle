@@ -18,11 +18,19 @@
 	});
 </script>
 
-<main class="min-h-screen bg-gray-50 text-gray-950">
-	<nav class="h-20 flex items-center justify-center bg-gray-100">
+<main class="h-screen bg-gray-50 text-gray-950">
+	<nav class="h-20 flex items-center justify-between px-4 mb-4 bg-gray-100">
 		<a href="/">
-			<img src="/logo.png" alt="Doogle Logo" class="h-24" />
+			<img src="/logo.png" alt="Doogle Logo" class="h-16" />
 		</a>
+
+		{#if session}
+			<a href={`/profile/${session.user.id}`}>
+				<img src={session.user.user_metadata.avatar_url} alt="avatar" class="h-14 rounded-full" />
+			</a>
+		{:else}
+			<a href="/login" class="text-2xl font-bold text-gray-950 hover:text-gray-900"> Login </a>
+		{/if}
 	</nav>
 
 	<slot />
