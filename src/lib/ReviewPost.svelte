@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Session, SupabaseClient } from "@supabase/supabase-js";
+	import type { SupabaseClient } from "@supabase/supabase-js";
 	import type { Database } from "./database.types";
 
 	export let supabase: SupabaseClient<Database>;

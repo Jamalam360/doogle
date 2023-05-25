@@ -10,13 +10,13 @@ export const load: PageServerLoad = async ({ params, locals: { getSession, supab
 
 	const userId = params.id;
 
-  const { data, error } = await supabase
-    .from("posts")
-    .select("*")
-    .order("created_at", { ascending: false })
-    .eq("approved", true)
-    .eq("user_id", userId)
-    .limit(10);
+	const { data, error } = await supabase
+		.from("posts")
+		.select("*")
+		.order("created_at", { ascending: false })
+		.eq("approved", true)
+		.eq("user_id", userId)
+		.limit(10);
 	console.error(error);
 	return { session, user: session.user, posts: data };
 };
