@@ -9,6 +9,16 @@ export const load: PageServerLoad = (async ({ locals: { getSession, supabase } }
   }
 
   const { data, error } = await supabase.from("posts").select("*").order("created_at", { ascending: false }).eq("approved", true).limit(10);
-  console.error(error);
-  return { session, user: session.user, posts: data }
+
+  if (error) {
+    console.error(error);
+  }
+  
+  const { data: reactions, error: votesError } = await supabase.from("post_reactions").select("*").eq("user_id", session.user.id);
+
+  if (votesError) {
+    console.error(votesError);
+  }
+
+  return { session, user: session.user, posts: (data || []).filter((p) => (reactions || []).findIndex((r) => r.post_id === p.id) == -1) }
 })

@@ -34,9 +34,11 @@ export const actions: Actions = {
 			return fail(400, { data: "invalid file type" });
 		}
 
+		const fileName = crypto.randomUUID() + "." + file.name.split(".").pop();
+
 		const { data: sd, error: se } = await supabase.storage
 			.from("images")
-			.upload(`${session.user.id}/${file.name}`, file, {
+			.upload(`${session.user.id}/${fileName}`, file, {
 				contentType,
 			});
 
