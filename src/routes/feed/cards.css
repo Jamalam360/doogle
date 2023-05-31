@@ -1,0 +1,56 @@
+.card {
+    --card-x: 0;
+    --card-y: 0;
+    --card-r: 0;
+    transform: translate(var(--card-x), var(--card-y)) rotate(var(--card-r));
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    margin-top: -220px;
+    margin-left: -156px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    font-size: 24px;
+    padding: 28px;
+    box-sizing: border-box;
+    line-height: 1.3;
+    touch-action: none
+}
+
+.card[data-dragging="false"] {
+	transition: transform 0.5s;
+}
+
+.card[data-status="current"] {
+	z-index: 2;
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+
+.card[data-status="done"] {
+    --card-x: 0 !important;
+    --card-y: 0 !important;
+    --card-r: 0 !important;
+    display: none;
+    transition: none !important;
+    z-index: -1;
+    opacity: 0;
+}
+
+.card[data-status="current"] + .card {
+	z-index: 1;
+	--card-r: -2.5deg;
+}
+
+.card[data-status="current"] + .card + .card {
+	z-index: 0;
+}
+
+.card[data-status="transition"] {
+	z-index: 3;
+}
+
+.card * {
+	pointer-events: none;
+}

@@ -8,9 +8,6 @@ export default {
 		{
 			pattern: /z-/,
 		},
-		{
-			pattern: /-?rotate-/,
-		},
 	],
 	plugins: [],
 };

@@ -3,7 +3,6 @@
 	import { invalidate } from "$app/navigation";
 	import { onMount } from "svelte";
 	import type { LayoutData } from "./$types";
-	import { page } from "$app/stores";
 
 	export let data: LayoutData;
 
@@ -30,7 +29,7 @@
 			<a href={`/profile/${session.user.id}`}>
 				<img src={session.user.user_metadata.avatar_url} alt="avatar" class="h-14 rounded-full" />
 			</a>
-		{:else if $page.url.pathname !== "/login"}
+		{:else if data.path !== "/login"}
 			<a href="/login" class="text-2xl font-bold text-gray-950 hover:text-gray-900"> Login </a>
 		{/if}
 	</nav>
