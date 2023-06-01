@@ -3,11 +3,11 @@
     --card-y: 0;
     --card-r: 0;
     transform: translate(var(--card-x), var(--card-y)) rotate(var(--card-r));
-    top: 50%;
-    left: 50%;
     position: absolute;
-    margin-top: -220px;
-    margin-left: -156px;
+    width: min(90vw, 600px);
+    margin: 0 auto;
+    left: 0;
+    right: 0;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
