@@ -13,7 +13,6 @@
 	const INTERACT_MAX_ROTATION = 15;
 
 	let currentIdx = 0;
-	let currentFetchIdx = data.fetchIncrement + 1;
 	let rotation = 0;
 	let x = 0;
 	let y = 0;
@@ -80,13 +79,13 @@
 									.order("created_at", { ascending: false })
 									.eq("approved", true)
 									.not("id", "in", `(${(previousVotes || []).map((post) => post.post_id).join(",")})`)
-									.range(currentFetchIdx, currentFetchIdx + data.fetchIncrement)
+									.limit(data.fetchIncrement)
 									.then((res) => {
 										let { data: newData, error } = res;
-
+										
 										if (newData) {
+											newData = newData.filter((post) => !posts.find((p) => p.id == post.id));
 											posts = [...posts, ...newData];
-											currentFetchIdx += newData.length;
 										} else if (!data || error) {
 											console.error(data, error);
 										}
