@@ -6,7 +6,8 @@ import type { Handle } from "@sveltejs/kit";
 
 Sentry.init({
     dsn: "https://dd2cf4f45b4a4f1eb21cf554b5739a52@o4505291516870656.ingest.sentry.io/4505291519164416",
-    tracesSampleRate: 1
+	tracesSampleRate: 1,
+	enabled: import.meta.env.PROD,
 })
 
 export const handle: Handle = sequence(Sentry.sentryHandle(), async ({ event, resolve }) => {
@@ -32,4 +33,5 @@ export const handle: Handle = sequence(Sentry.sentryHandle(), async ({ event, re
 		},
 	});
 });
+
 export const handleError = Sentry.handleErrorWithSentry();
