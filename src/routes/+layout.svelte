@@ -19,7 +19,7 @@
 	});	
 </script>
 
-<main class="h-screen bg-gray-50 text-gray-950">
+<main class="h-screen bg-gray-50 text-nose">
 	<nav class="h-20 flex items-center justify-between px-4 mb-4 bg-gray-100">
 		<a href="/">
 			<img src="/logo.png" alt="Doogle Logo" class="h-16" />

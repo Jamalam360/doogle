@@ -2,7 +2,14 @@
 export default {
 	content: ["./src/**/*.{html,js,svelte,ts}"],
 	theme: {
-		extend: {},
+		extend: {
+			colors: {
+				dg: "#009ba3",
+				ole: "#00dde7",
+				ear: "#a68061",
+				nose: "#404b55",
+			}
+		},
 	},
 	safelist: [
 		{

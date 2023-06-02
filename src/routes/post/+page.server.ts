@@ -1,17 +1,16 @@
 import { fail, redirect } from "@sveltejs/kit";
 import type { Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
+import { encodeImageToBlurhash } from "$lib/blurhash";
 
-export const load: PageServerLoad = async ({ locals: { getSession, supabase } }) => {
+export const load: PageServerLoad = async ({ locals: { getSession } }) => {
 	const session = await getSession();
 
 	if (!session) {
 		throw redirect(303, "/login");
 	}
 
-	const { data, error } = await supabase.from("posts").select("*").order("created_at", { ascending: false }).limit(10);
-	console.error(error);
-	return { session, user: session.user, posts: data };
+	return { session, user: session.user };
 };
 
 export const actions: Actions = {
@@ -49,7 +48,7 @@ export const actions: Actions = {
 		const {
 			data: { publicUrl },
 		} = supabase.storage.from("images").getPublicUrl(sd.path);
-		const { error: ie } = await supabase.from("posts").insert({ image: publicUrl, user_id: session.user.id });
+		const { error: ie } = await supabase.from("posts").insert({ image: publicUrl, user_id: session.user.id, blurhash_placeholder: await encodeImageToBlurhash(file) });
 
 		if (ie) {
 			return fail(400, { data: ie });
