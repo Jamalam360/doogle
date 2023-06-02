@@ -54,14 +54,3 @@
 .card * {
 	pointer-events: none;
 }
-
-/* Select all images with alt "Dog" that aren't preceding siblings of a div containing a canvas: */
-div:not(:has(canvas)) + img[alt="Dog"] {
-	position: relative !important;
-	height: 60vh;
-	width: 100%;
-	aspect-ratio: 9/16;
-	object-fit: cover;
-	padding: 0.5rem;
-	border-radius: 1.5rem;
-}

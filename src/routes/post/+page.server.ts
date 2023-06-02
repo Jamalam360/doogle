@@ -1,7 +1,6 @@
 import { fail, redirect } from "@sveltejs/kit";
 import type { Actions } from "@sveltejs/kit";
 import type { PageServerLoad } from "./$types";
-import { encodeImageToBlurhash } from "$lib/blurhash";
 
 export const load: PageServerLoad = async ({ locals: { getSession } }) => {
 	const session = await getSession();
@@ -21,7 +20,8 @@ export const actions: Actions = {
 			throw redirect(303, "/login");
 		}
 
-		const file = (await request.formData()).get("file") as File | null;
+		const formData = await request.formData();
+		const file = formData.get("file") as File | null;
 
 		if (!file) {
 			return fail(400, { data: "no file lol" });
@@ -48,7 +48,7 @@ export const actions: Actions = {
 		const {
 			data: { publicUrl },
 		} = supabase.storage.from("images").getPublicUrl(sd.path);
-		const { error: ie } = await supabase.from("posts").insert({ image: publicUrl, user_id: session.user.id, blurhash_placeholder: await encodeImageToBlurhash(file) });
+		const { error: ie } = await supabase.from("posts").insert({ image: publicUrl, user_id: session.user.id, blurhash_placeholder: formData.get("blurhash_placeholder") as string });
 
 		if (ie) {
 			return fail(400, { data: ie });
