@@ -5,7 +5,7 @@
 
 	export let supabase: SupabaseClient<Database>;
 	export let post: Database["public"]["Tables"]["posts"]["Row"];
-	export let status: "current" | "done" | "waiting" = "waiting";
+	export let status: "current" | "done" | "loading" | "waiting" = "waiting";
 
 	let state: "loading" | "fading" | "loaded" = "loading";
 

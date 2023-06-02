@@ -109,7 +109,7 @@
 <div class="w-full">
 	{#each posts as post, i}
 		{#key post.id}
-			<Post {post} supabase={data.supabase} status={i == 0 ? "current" : "waiting"} />
+			<Post {post} supabase={data.supabase} status={i == 0 ? "current" : (i < currentIdx + 3 ? "loading" : "waiting")} />
 		{/key}
 	{/each}
 </div>
