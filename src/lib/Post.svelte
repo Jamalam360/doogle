@@ -80,8 +80,6 @@
 				class="absolute top-0 left-0 object-cover aspect-[9/16] rounded-3xl transition-opacity duration-1000"
 				style={(state !== "loading" ? "opacity: 1;" : "opacity: 0;") +
 					(state === "loaded" ? "position: relative !important;" : "")}
-				loading="lazy"
-				decoding="async"
 			/>
 		</div>
 	</div>
