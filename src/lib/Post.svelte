@@ -7,11 +7,12 @@
 	export let post: Database["public"]["Tables"]["posts"]["Row"];
 	export let status: "current" | "done" | "loading" | "waiting" = "waiting";
 
+	let image: HTMLImageElement;
 	let state: "loading" | "fading" | "loaded" = "loading";
 
 	function onImageLoaded() {
 		state = "fading";
-		setTimeout(() => state = "loaded", 1100);
+		setTimeout(() => (state = "loaded"), 1100);
 	}
 
 	let profile =
@@ -39,6 +40,12 @@
 				}
 			});
 	}
+
+	$: {
+		if (status === "done") {
+			image.src = "";
+		}
+	}
 </script>
 
 <div class="card rounded-3xl bg-sky-100" data-dragging="false" data-status={status}>
@@ -60,23 +67,24 @@
 	</div>
 
 	<div class="w-full p-2">
+		<div class="relative w-full">
+			{#if state !== "loaded"}
+				<Blurhash hash={post.blurhash_placeholder} />
+			{/if}
 
-	<div class="relative w-full">
-		{#if state !== "loaded"}
-			<Blurhash hash={post.blurhash_placeholder} />
-		{/if}
-
-		<img
-			on:load={onImageLoaded}
-			src={post.image}
-			alt="Dog"
-			class="absolute top-0 left-0 object-cover aspect-[9/16] rounded-3xl transition-opacity duration-1000"
-			style={(state !== "loading" ? "opacity: 1;" : "opacity: 0;") + (state === "loaded" ? "position: relative !important;" : "")}
-			loading="lazy"
-			decoding="async"
-		/>
+			<img
+				bind:this={image}
+				on:load={onImageLoaded}
+				src={status === "waiting" ? "" : post.image}
+				alt="Dog"
+				class="absolute top-0 left-0 object-cover aspect-[9/16] rounded-3xl transition-opacity duration-1000"
+				style={(state !== "loading" ? "opacity: 1;" : "opacity: 0;") +
+					(state === "loaded" ? "position: relative !important;" : "")}
+				loading="lazy"
+				decoding="async"
+			/>
+		</div>
 	</div>
-</div>
 
 	<h2 class="pt-2 text-center text-4xl font-bold">{value}</h2>
 </div>
