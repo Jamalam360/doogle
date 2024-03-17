@@ -21,7 +21,7 @@ export const load: PageServerLoad = async ({ locals: { getSession, supabase } })
 		.order("created_at", { ascending: false })
 		.eq("approved", true)
 		.not("id", "in", `(${(previousVotes || []).map((post) => post.post_id).join(",")})`)
-		.limit(FETCH_INCREMENT);	
+		.limit(FETCH_INCREMENT);
 
 	if (error || !data) {
 		console.error(error);
